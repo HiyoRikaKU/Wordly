@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IELTS Recall 遺忘曲線字卡</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#282e3e;--sub:#586380;--line:#dfe3ee;--blue:#4255ff;--blueh:#3a4de0;--tint:#edefff;--yellow:#ffcd1f;--green:#18ae79;--red:#ff5c5c;--shadow:0 2px 12px rgba(40,46,62,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a092d;--card:#2e3856;--text:#f6f7fb;--sub:#b6bfd8;--line:#3d4a6b;--tint:#3a4470;--shadow:none}}
+:root[data-theme="dark"]{--bg:#0a092d;--card:#2e3856;--text:#f6f7fb;--sub:#b6bfd8;--line:#3d4a6b;--tint:#3a4470;--shadow:none}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Hind,"Noto Sans TC",system-ui,sans-serif;line-height:1.5}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{max-width:880px;margin:auto;padding:10px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:20px;color:var(--blue);letter-spacing:-.3px}
+nav{display:flex;gap:4px;flex:1}
+nav button{border:0;background:none;font:600 15px inherit;font-family:inherit;color:var(--sub);padding:8px 14px;border-radius:8px;cursor:pointer}
+nav button:hover{background:var(--tint)}nav button.on{color:var(--blue);background:var(--tint)}
+main{max-width:880px;margin:auto;padding:20px 16px 60px}
+.view{display:none}.view.on{display:block}
+.stats{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.stat{background:var(--card);border-radius:12px;padding:8px 14px;box-shadow:var(--shadow);font-size:14px;color:var(--sub)}
+.stat b{display:block;font-size:20px;color:var(--text)}
+.prog{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px}
+.prog i{display:block;height:100%;background:var(--blue);width:0;transition:width .3s}
+.scene{perspective:1400px;height:min(440px,62vh);min-height:340px}
+.card{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;cursor:pointer}
+.card.flip{transform:rotateX(180deg)}
+.face{position:absolute;inset:0;background:var(--card);border-radius:16px;box-shadow:0 4px 20px rgba(40,46,62,.12);backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:24px;overflow:auto}
+.front{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
+.back{transform:rotateX(180deg)}
+.word{font-size:clamp(36px,9vw,60px);font-weight:700;letter-spacing:-.5px}
+.ipa{font-size:20px;color:var(--sub);font-family:"Noto Sans",system-ui,sans-serif}
+.spk{border:0;background:var(--tint);color:var(--blue);width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}
+.spk:hover{background:var(--blue);color:#fff}
+.hint{position:absolute;bottom:14px;font-size:13px;color:var(--sub)}
+.sense{padding:12px 0;border-bottom:1px solid var(--line)}.sense:last-child{border:0}
+.chip{display:inline-block;background:var(--yellow);color:#282e3e;font-size:12px;font-weight:700;padding:1px 10px;border-radius:20px;margin-bottom:4px}
+.zh{font-size:22px;font-weight:700}
+.pp{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.pp span{background:var(--tint);color:var(--blue);padding:2px 10px;border-radius:8px;font-weight:600;font-size:15px}
+:root[data-theme="dark"] .pp span{color:#fff}
+.ex{color:var(--sub);font-size:15px;font-style:italic}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.rate button,.btn{border:0;border-radius:10px;font:700 16px inherit;font-family:inherit;padding:13px;cursor:pointer;transition:transform .1s,background .15s}
+.rate button:disabled{opacity:.35;cursor:not-allowed}
+.rate button:not(:disabled):active,.btn:active{transform:scale(.97)}
+.r1{background:var(--red);color:#fff}.r2{background:var(--yellow);color:#282e3e}.r3{background:var(--green);color:#fff}
+.rate small{display:block;font-weight:500;opacity:.85;font-size:12px}
+.btn{background:var(--blue);color:#fff;padding:12px 24px}.btn:hover{background:var(--blueh)}
+.btn.ghost{background:var(--tint);color:var(--blue)}
+.panel{background:var(--card);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.done{text-align:center;padding:50px 20px}.done h2{margin:0 0 6px}
+label{display:block;font-weight:600;font-size:13px;color:var(--sub);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.4px}
+input{width:100%;font:16px inherit;font-family:inherit;padding:11px 12px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);outline:0}
+input:focus{border-color:var(--blue)}
+.srow{border:2px dashed var(--line);border-radius:12px;padding:6px 14px 14px;margin-top:14px;position:relative}
+.srow .x{position:absolute;right:8px;top:8px;border:0;background:none;color:var(--sub);cursor:pointer;font-size:18px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.g2{grid-template-columns:1fr}.rate button{padding:11px 4px;font-size:14px}}
+.item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}.item .w{flex:1;min-width:0}.item .w b{font-size:18px}.item .w div{font-size:13px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ret{width:90px;text-align:right;font-size:13px;color:var(--sub)}
+.ret i{display:block;height:5px;border-radius:5px;background:var(--line);margin-top:3px;overflow:hidden}.ret i s{display:block;height:100%;background:var(--green)}
+.del{border:0;background:none;color:var(--sub);cursor:pointer;font-size:18px}.del:hover{color:var(--red)}
+.curve{width:100%;height:auto;margin-bottom:6px}
+.note{color:var(--sub);font-size:14px}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(80px);background:#282e3e;color:#fff;padding:10px 20px;border-radius:10px;transition:transform .3s;z-index:9}.toast.on{transform:translateX(-50%)}
+@media(prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="bar"><span class="logo">IELTS Recall</span>
+<nav><button data-v="study" class="on">複習</button><button data-v="add">新增字卡</button><button data-v="lib">字卡庫</button></nav><span id="sync" class="note" style="font-size:13px">本機模式</span></div></header>
+<main>
+<section id="study" class="view on"></section>
+<section id="add" class="view"></section>
+<section id="lib" class="view"></section>
+</main>
+<div class="toast" id="toast"></div>
+<datalist id="ctx"><option value="閱讀·T/F/NG"><option value="閱讀·配對標題"><option value="閱讀·填空"><option value="聽力·填空"><option value="聽力·選擇題"><option value="學術寫作"><option value="口語"><option value="一般"></datalist>
+<script>
+const KEY='ielts_cards_v1';
+const IV=[10,1440,2880,5760,10080,21600,43200]; // 分鐘：10分、1、2、4、7、15、30天
+const LBL=['10 分鐘','1 天','2 天','4 天','7 天','15 天','30 天'];
+const SEED=[
+['contribute','/kənˈtrɪbjuːt/',[['閱讀·因果','促成、導致','contribute to sth','Poor diet contributes to obesity.'],['一般','捐出（錢／物）','contribute sth to / toward sth','She contributed $500 to the fund.']]],
+['account','/əˈkaʊnt/',[['閱讀·因果／數據','解釋；（比例）佔','account for sth','Rent accounts for 40% of income.'],['聽力·填空','因為（常為 on account of）','on account of sth','Delayed on account of fog.'],['學術寫作','考慮到','take sth into account','Take cost into account.']]],
+['attribute','/əˈtrɪbjuːt/',[['閱讀·T/F/NG','把…歸因於（動詞）','attribute A to B','He attributes his success to luck.'],['一般','特質（名詞，重音在前 /ˈætrɪbjuːt/）','an attribute of sth','Patience is a key attribute.']]],
+['adapt','/əˈdæpt/',[['閱讀·生物／環境','適應','adapt to sth','Species adapt to climate change.'],['一般','改編（自）','adapt sth from sth','The film is adapted from a novel.']]],
+['consist','/kənˈsɪst/',[['閱讀·配對','由…組成','consist of sth','The panel consists of five experts.'],['學術寫作','在於、本質上是','consist in sth','Its value consists in its simplicity.']]],
+['deal','/diːl/',[['聽力·選擇題','處理、應付','deal with sth','Councils must deal with waste.'],['閱讀·數據','大量','a great deal of sth','A great deal of research exists.'],['一般','經營、買賣','deal in sth','They deal in antiques.']]],
+['rely','/rɪˈlaɪ/',[['閱讀·T/F/NG','依賴、依靠','rely on / upon sth','Farmers rely on rainfall.']]],
+['approach','/əˈprəʊtʃ/',[['學術寫作','（解決問題的）方法','an approach to sth','A new approach to teaching.'],['聽力·填空','接近；著手處理','approach sth','Approach the problem carefully.']]]];
+const mk=(s,i)=>({id:'s'+i,w:s[0],ipa:s[1],senses:s[2].map(x=>({c:x[0],z:x[1],p:x[2],e:x[3]})),box:-1,due:0,last:0,u:0});
+let cards=load(),queue=[],total=0,flipped=false,sessionDone=0;
+function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return SEED.map(mk)}
+function save(ch){try{localStorage.setItem(KEY,JSON.stringify(cards))}catch(e){}(ch||[]).forEach(c=>{c.u=Date.now();push(c)})}
+let col=null;
+function setSync(t){$('#sync').textContent=t}
+function push(c){if(!col)return;c.u=c.u||Date.now();col.doc(c.id).set({id:c.id,w:c.w,ipa:c.ipa||'',s:JSON.stringify(c.senses),box:c.box,due:c.due,last:c.last,u:c.u}).catch(()=>setSync('同步失敗，已存本機'))}
+function drop(id){if(col)col.doc(id).delete().catch(()=>{})}
+const fromDoc=d=>({id:d.id,w:d.w,ipa:d.ipa,senses:JSON.parse(d.s||'[]'),box:d.box,due:d.due,last:d.last,u:d.u||0});
+async function initSync(){
+ try{
+  const db=await claude.use('db'),user=await claude.use('user');
+  if(!db||!user)return;
+  col=db.collection('data/users/'+await user.id()+'/cards');
+  let first=true;
+  col.onSnapshot(snap=>{
+   if(first&&snap.metadata.fromCache&&snap.empty)return;
+   const remote=new Map();snap.docs.forEach(d=>{try{remote.set(d.id,fromDoc(d.data()))}catch(e){}});
+   if(first){first=false;
+    const local=new Map(cards.map(c=>[c.id,c])),out=[];
+    remote.forEach((r,id)=>{const l=local.get(id);out.push(l&&l.u>r.u?l:r)});
+    local.forEach((l,id)=>{if(!remote.has(id)&&(remote.size===0||id[0]==='u'))out.push(l)});
+    out.forEach(c=>{const r=remote.get(c.id);if(!r||c.u>r.u)push(c)});
+    cards=out;
+   }else{
+    snap.docChanges().forEach(ch=>{
+     if(ch.doc.metadata.hasPendingWrites)return;
+     const id=ch.doc.id;
+     if(ch.type==='removed')cards=cards.filter(c=>c.id!==id);
+     else{const r=remote.get(id);if(!r)return;const i=cards.findIndex(c=>c.id===id);if(i<0)cards.push(r);else if(r.u>=cards[i].u)cards[i]=r}
+    });
+   }
+   try{localStorage.setItem(KEY,JSON.stringify(cards))}catch(e){}
+   setSync('☁ 已同步');
+   if($('#study').classList.contains('on')&&!flipped){buildQueue();study()}
+   if($('#lib').classList.contains('on'))lib();
+  },()=>setSync('同步失敗，已存本機'));
+ }catch(e){}
+}
+async function exportJson(){
+ const data=JSON.stringify(cards,null,2);
+ try{const d=await claude.use('downloads');if(d){await d.save({filename:'ielts-cards.json',data});return}}catch(e){if(e&&e.code==='declined')return}
+ const t=$('#jb');t.hidden=false;t.value=data;t.select();toast('請複製下方 JSON 自行保存');
+}
+function importJson(f){
+ const r=new FileReader();
+ r.onload=()=>{try{
+  const a=JSON.parse(r.result);if(!Array.isArray(a))throw 0;const ch=[];
+  a.forEach(x=>{if(!x||!x.w||!Array.isArray(x.senses))return;
+   const i=cards.findIndex(c=>c.id===x.id||c.w.toLowerCase()===String(x.w).toLowerCase());
+   if(i<0){const n={id:x.id||'u'+Date.now()+ch.length,w:String(x.w),ipa:x.ipa||'',senses:x.senses,box:x.box==null?-1:x.box,due:x.due||0,last:x.last||0,u:0};cards.push(n);ch.push(n)}
+   else if((x.u||0)>(cards[i].u||0)){cards[i]={...x,id:cards[i].id};ch.push(cards[i])}});
+  save(ch);toast('已匯入 '+ch.length+' 張');lib();
+ }catch(e){toast('檔案格式不正確')}};
+ r.readAsText(f);
+}
+document.addEventListener('click',e=>{if(e.target.id==='ex')exportJson()});
+document.addEventListener('change',e=>{if(e.target.id==='im'&&e.target.files[0]){importJson(e.target.files[0]);e.target.value=''}});
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
+function buildQueue(){queue=cards.filter(c=>c.due<=Date.now()).sort((a,b)=>a.due-b.due).map(c=>c.id);total=queue.length;sessionDone=0}
+function retention(c){if(!c.last)return null;const S=IV[Math.max(c.box,0)]*60000*3.5;return Math.exp(-(Date.now()-c.last)/S)}
+function fmt(ms){const m=Math.round(ms/60000);if(m<60)return Math.max(m,1)+' 分鐘後';if(m<1440)return Math.round(m/60)+' 小時後';return Math.round(m/1440)+' 天後'}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));
+function go(v){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id===v));if(v==='study'){buildQueue();study()}if(v==='add')addView();if(v==='lib')lib()}
+function speak(w){try{const u=new SpeechSynthesisUtterance(w);u.lang='en-GB';u.rate=.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function study(){
+ const el=$('#study');flipped=false;
+ const mastered=cards.filter(c=>c.box>=4).length;
+ const head=`<div class="stats"><div class="stat"><b>${queue.length}</b>待複習</div><div class="stat"><b>${cards.length}</b>總字卡</div><div class="stat"><b>${mastered}</b>已熟悉（≥7天）</div></div><div class="prog"><i style="width:${total?sessionDone/total*100:0}%"></i></div>`;
+ if(!queue.length){
+  const nx=cards.filter(c=>c.due>Date.now()).sort((a,b)=>a.due-b.due)[0];
+  el.innerHTML=head+`<div class="panel done"><div style="font-size:46px">🎉</div><h2>目前沒有需要複習的字卡</h2><p class="note">${nx?'下一張將在 '+fmt(nx.due-Date.now())+'到期（'+esc(nx.w)+'）':'還沒有字卡，先新增幾張吧！'}</p><button class="btn" onclick="go('add')">新增字卡</button></div>`;return}
+ const c=cards.find(x=>x.id===queue[0]);
+ const nxt=b=>LBL[b];
+ const g=c.box<0?1:Math.min(6,c.box+1),h=Math.max(c.box,0);
+ el.innerHTML=head+`<div class="scene"><div class="card" id="card"><div class="face front"><div class="word">${esc(c.w)}</div><div class="ipa">${esc(c.ipa)}</div><button class="spk" title="發音" id="spk">🔊</button><div class="hint">點擊卡片或按空白鍵翻面</div></div><div class="face back">${c.senses.map(s=>`<div class="sense"><span class="chip">${esc(s.c||'一般')}</span><div class="zh">${esc(s.z)}</div>${s.p?`<div class="pp">${s.p.split(/\s*[;；／]\s*/).map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}${s.e?`<div class="ex">${esc(s.e)}</div>`:''}</div>`).join('')}</div></div></div>
+ <div class="rate"><button class="r1" disabled>忘了<small>${nxt(0)}後 · 1</small></button><button class="r2" disabled>模糊<small>${nxt(h)}後 · 2</small></button><button class="r3" disabled>記得<small>${nxt(g)}後 · 3</small></button></div>`;
+ const card=$('#card');card.onclick=flip;$('#spk').onclick=e=>{e.stopPropagation();speak(c.w)};
+ const bs=el.querySelectorAll('.rate button');bs.forEach((b,i)=>b.onclick=()=>rate(i+1));
+}
+function flip(){const c=$('#card');if(!c)return;flipped=!flipped;c.classList.toggle('flip',flipped);document.querySelectorAll('.rate button').forEach(b=>b.disabled=!flipped)}
+function rate(r){
+ if(!flipped)return;const c=cards.find(x=>x.id===queue[0]);if(!c)return;
+ queue.shift();
+ if(r===1){c.box=0;c.due=Date.now()+IV[0]*60000;queue.push(c.id)}
+ else{c.box=r===3?(c.box<0?1:Math.min(6,c.box+1)):Math.max(c.box,0);c.due=Date.now()+IV[c.box]*60000;sessionDone++}
+ c.last=Date.now();save([c]);study();
+}
+document.addEventListener('keydown',e=>{
+ if(!$('#study').classList.contains('on')||/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+ if(e.code==='Space'){e.preventDefault();flip()}
+ if(['Digit1','Digit2','Digit3'].includes(e.code))rate(+e.code.slice(-1));
+});
+let rows=1;
+function addView(){
+ $('#add').innerHTML=`<div class="panel"><h2 style="margin:0 0 4px">新增字卡</h2><p class="note" style="margin:0">訂正閱讀／聽力時遇到的單字，依不同語境加上中文意思與介係詞搭配。</p>
+ <label>單字</label><input id="aw" placeholder="例如 attribute" autocomplete="off">
+ <label>音標（可留空）</label><input id="ai" placeholder="/əˈtrɪbjuːt/" autocomplete="off">
+ <div id="sr"></div>
+ <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn ghost" id="ms">＋ 新增另一個意思</button><button class="btn" id="sv">儲存字卡</button></div></div>`;
+ $('#sr').innerHTML='';rows=0;addRow();$('#ms').onclick=addRow;$('#sv').onclick=saveCard;
+}
+function addRow(){
+ rows++;const d=document.createElement('div');d.className='srow';
+ d.innerHTML=`${rows>1?'<button class="x" title="移除">×</button>':''}<div class="g2"><div><label>使用語境</label><input list="ctx" class="c" placeholder="閱讀·T/F/NG"></div><div><label>中文意思</label><input class="z" placeholder="歸因於"></div></div><label>介係詞搭配（用 ; 分隔）</label><input class="p" placeholder="attribute A to B; be attributed to"><label>例句（可留空）</label><input class="e" placeholder="例句">`;
+ const x=d.querySelector('.x');if(x)x.onclick=()=>d.remove();$('#sr').appendChild(d);
+}
+function saveCard(){
+ const w=$('#aw').value.trim();if(!w)return toast('請輸入單字');
+ const senses=[...document.querySelectorAll('.srow')].map(r=>({c:r.querySelector('.c').value.trim(),z:r.querySelector('.z').value.trim(),p:r.querySelector('.p').value.trim(),e:r.querySelector('.e').value.trim()})).filter(s=>s.z);
+ if(!senses.length)return toast('至少填一個中文意思');
+ const ex=cards.find(c=>c.w.toLowerCase()===w.toLowerCase());
+ let t;
+ if(ex){ex.senses=ex.senses.concat(senses);ex.ipa=$('#ai').value.trim()||ex.ipa;t=ex;toast('已合併到既有字卡')}
+ else{t={id:'u'+Date.now(),w,ipa:$('#ai').value.trim(),senses,box:-1,due:0,last:0,u:0};cards.push(t);toast('已新增字卡')}
+ save([t]);addView();
+}
+function lib(){
+ const pts=[];for(let i=0;i<=40;i++){const t=i/40*6;pts.push(`${(40+i*7).toFixed(0)},${(130-Math.exp(-t/1.2)*110).toFixed(1)}`)}
+ const rev=[0,.9,1.8,3.2,4.6].map(t=>`<circle cx="${40+t/6*280}" cy="${130-Math.exp(-t/1.2)*110}" r="4" fill="var(--yellow)"/>`).join('');
+ $('#lib').innerHTML=`<div class="panel" style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn ghost" id="ex">匯出 JSON</button><label class="btn ghost" style="margin:0;text-transform:none;letter-spacing:0;font-size:16px;color:var(--blue)">匯入 JSON<input type="file" id="im" accept=".json,application/json" hidden></label><span class="note">登入 claude.ai 後，字卡會在你的裝置間同步</span><textarea id="jb" hidden style="width:100%;height:120px"></textarea></div><div class="panel" style="margin-bottom:16px"><svg class="curve" viewBox="0 0 340 160" role="img" aria-label="遺忘曲線示意"><line x1="40" y1="130" x2="320" y2="130" stroke="var(--line)"/><line x1="40" y1="10" x2="40" y2="130" stroke="var(--line)"/><polyline fill="none" stroke="var(--blue)" stroke-width="3" points="${pts.join(' ')}"/>${rev}<text x="46" y="22" font-size="11" fill="var(--sub)">記憶保留率</text><text x="250" y="148" font-size="11" fill="var(--sub)">時間 →</text></svg><div class="note">依艾賓浩斯遺忘曲線，複習間隔：10 分 → 1 天 → 2 天 → 4 天 → 7 天 → 15 天 → 30 天。按「忘了」回到第一階；「記得」升一階。</div></div>
+ <div class="panel">${cards.map(c=>{const r=retention(c);return `<div class="item"><div class="w"><b>${esc(c.w)}</b> <span class="note">${esc(c.ipa)}</span><div>${esc(c.senses.map(s=>s.z).join('；'))}</div></div><div class="ret">${r==null?'新卡':Math.round(r*100)+'%'}<i><s style="width:${r==null?0:r*100}%"></s></i></div><button class="del" data-id="${c.id}" title="刪除">🗑</button></div>`}).join('')||'<p class="note">還沒有字卡</p>'}</div>`;
+ document.querySelectorAll('.del').forEach(b=>b.onclick=()=>{if(confirm('刪除這張字卡？')){cards=cards.filter(c=>c.id!==b.dataset.id);save();drop(b.dataset.id);lib()}});
+}
+buildQueue();study();initSync();
+</script>
+</body>
+</html>
